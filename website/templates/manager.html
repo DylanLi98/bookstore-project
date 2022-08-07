@@ -1,0 +1,80 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block content%}
+
+<a href='{{url_for("views.user_profile")}}'  class='btn btn-outline-dark float-left' >User Profile </a>
+
+
+<div class="jumbotron">
+
+  <a href='{{url_for("views.order_history")}}'  class='btn btn-outline-dark float-right' >See Orders</a>
+
+  <h2 align="center"> Welcome to UAB Bookstore Manager Page</h2>
+
+<div class="container">
+  <h4 align="left">Order notification</h4>
+  <ul class="list-group list-group-flush" id="notes">
+    {% for note in user.notes %}
+    <li class="list-group-item">
+      <p> A new order (#{{ note.order_number }} ) is placed! </p>
+      <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="container">
+  <h4>Add books to the store</h4>
+  
+  <form method="post" action="{{url_for('auth.add_book')}}" class='text-center' >
+    <label for="bname"></label><input type="text" name ="bname" placeholder="Book Title" style="width: 400px;">
+    <label for="authors" ></label> <input type="text" name ="authors" placeholder="Authors" style="width: 150px;">
+    <label for="category" ></label> <input type="text" name ="category" placeholder="Category" style="width: 100px;"> 
+    <label for="ISBN" ></label> <input type="text" name ="ISBN" placeholder="ISBN" style="width: 100px;">
+    <label for="price" ></label> <input type="float" name ="price" placeholder="Price" style="width: 70px;">
+    <label for="qty" ></label> <input type="integer" name ="qty" placeholder="Quantity" style="width: 70px;">
+    <input type="submit" class='btn btn-success' value="+Add">
+  </form>
+
+  <br><br>
+  <h3 class='text-center '>Book List</h3>
+</div>
+  <div class="dropdown">
+    <button class="dropbtn">Select a category</button>
+    <div class="dropdown-content">
+      <a href='{{url_for("views.show_books",choice="All")}}' class='btn btn-primary'>All</a>
+      <a href='{{url_for("views.show_books",choice="Adventure")}}' class='btn btn-primary'>Adventure</a>
+      <a href='{{url_for("views.show_books",choice="Fictionary")}}' class='btn btn-primary'>Fictionary</a>
+      <a href='{{url_for("views.show_books",choice="Scientifc")}}' class='btn btn-primary'>Scientifc</a>
+      <a href='{{url_for("views.show_books",choice="History")}}' class='btn btn-primary'>History</a>
+    </div>
+  </div>
+
+  <table class='table table-bordered' >
+    <thead>
+      <th>Book Title</th>
+      <th>Authors</th>
+      <th>ISBN</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Stock qty</th>
+      <th>Add to cart</th>
+    </thead>
+    <tbody>
+      {% for book in bklist %}
+        <tr>
+          <td>{{book.bname}}</td>
+          <td>{{book.authors}}</td>
+          <td>{{book.ISBN}}</td>
+          <td>{{book.category}} </td>
+          <td>{{book.price}} </td>
+          <td>{{book.qty}} </td>
+          <td><a href='{{url_for("auth.edit_book",ISBN=book.ISBN)}}' class='btn btn-primary'>Edit</a></td>
+        </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock %}
